@@ -16,7 +16,7 @@ import java.util.List;
 @NamedQueries
 ({
 	@NamedQuery(name="Usuario.findAll", query="SELECT u FROM Usuario u"),
-	@NamedQuery(name="Usuario.findValid", query="SELECT u FROM Usuario u where u.usuario = :usuario and u.pass = :password")
+	@NamedQuery(name="Usuario.findValid", query="SELECT u FROM Usuario u where u.usuario = :usuario and u.pass = :password and u.esActivo <> 0")
 })
 public class Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
