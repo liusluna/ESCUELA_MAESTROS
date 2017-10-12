@@ -52,28 +52,40 @@
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
               <li class="active"><a href="app.jsp">Inicio</a></li>
+              <% if (   Integer.parseInt(String.valueOf(misesion.getAttribute("admin"))) == 1  ) {   %>
               <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Alumnos <span class="caret"></span></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Usuarios <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li><a href="Alumnos?operacion=muestra&">Mostrar</a></li>
+                  <li><a href="Usuarios?operacion=muestra&">Listar</a></li>
                   <li role="separator" class="divider"></li>
-                  <li><a href="addAlumno.jsp">Alta</a></li>
+                  <li><a href="addUsuario.jsp">Alta</a></li>
                 </ul>
               </li>
+              <%  } %>
+              
                <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Horarios <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li><a href="Horarios?operacion=muestra&">Mostrar</a></li>
+                  <% if (  Integer.parseInt(String.valueOf(misesion.getAttribute("admin"))) == 1  ) {   %>
+                  <li><a href="Horarios?operacion=muestra&">Listar</a></li>
                   <li role="separator" class="divider"></li>
-                  <li><a href="addHorario.jsp">Alta</a></li>
+                  <li><a href="addHorario.jsp">Asignar</a></li>
+                  <% } %>
+                  <% if (  Integer.parseInt(String.valueOf(misesion.getAttribute("maestro"))) == 1  ) {   %>
+                  <li><a href="pedirCambio.jsp">Cambio</a></li><!-- Rafa -->
+                  <% } %>
                 </ul>
               </li> 
               <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Materias <span class="caret"></span></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reportes <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li><a href="Materias?operacion=muestra&">Mostrar</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="addMateria.jsp">Alta</a></li>
+                  <% if (  Integer.parseInt(String.valueOf(misesion.getAttribute("admin"))) == 1  ) {   %>
+                  <li><a href="Materias?operacion=muestra&">General</a></li>
+                  <% } %>
+                  <!--  li role="separator" class="divider"></li-->
+                  <% if (  Integer.parseInt(String.valueOf(misesion.getAttribute("maestro"))) == 1  ) {   %>
+                  <li><a href="addMateria.jsp">Horarios Asignados</a></li>
+                  <% } %>
                 </ul>
               </li>     
               <li><a href="#aboutModal" data-toggle="modal" data-target="#myModal">Acerca de</a></li>
@@ -97,22 +109,31 @@
                     <h4 class="modal-title" id="myModalLabel">Acerca de Escuela </h4>
                     </div>
                 <div class="modal-body">
-                    <center>
-                    <img src="images/Lius.jpg" name="aboutme" width="140" height="140" border="0" class="img-circle">
-                    <h3 class="media-heading">Arturo Luna <small>MEX</small></h3>
-                    <span><strong>Hecho con: </strong></span>
-                        <span class="label label-warning">HTML5/CSS</span>
-                        <span class="label label-info">Bootstrap</span>
-                        <span class="label label-info">JQuery</span>
-                    <span class="label label-info">Mysql</span>
-                        <span class="label label-success">JPA</span>
-                    </center>
-                    <hr>
-                    <center>
-                    <p class="text-left"><strong>Contacto: </strong><br>
-                        lius.luna@gmail.com </p>
-                    <br>
-                    </center>
+						<center>
+							<img src="images/carnage.jpg" name="aboutme" width="140"
+								height="140" border="0" class="img-circle">
+							<h3 class="media-heading">
+								Rafael Mendoza <small>MEX</small>
+							</h3>
+							<p class="text-left">
+								<strong>Contacto: </strong><br> rafaelchagolla@gmail.com
+							</p>
+							<br> <img src="images/Lius.jpg" name="aboutme" width="140"
+								height="140" border="0" class="img-circle">
+							<h3 class="media-heading">
+								Arturo Luna <small>MEX</small>
+							</h3>
+							<p class="text-left">
+								<strong>Contacto: </strong><br> lius.luna@gmail.com
+							</p>
+							<br>
+							<span><strong>Hecho con: </strong></span> <span
+								class="label label-warning">HTML5/CSS</span> <span
+								class="label label-primary">Bootstrap</span> <span
+								class="label label-info">JQuery</span> <span
+								class="label  label-success">Mysql</span> <span
+								class="label label-danger">JPA</span>
+						</center>
                 </div>
                 <div class="modal-footer">
                     <center>

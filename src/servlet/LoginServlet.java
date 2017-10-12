@@ -47,11 +47,10 @@ public class LoginServlet extends HttpServlet {
 		EntityManagerFactory emf=Persistence.createEntityManagerFactory("ESCUELA_MAESTROS"); //		-> NOMBRE DEL PROYECTO
 		EntityManager em=emf.createEntityManager();
 		boolean operacion = true;
+		Usuario usu =null;
 		try {
 			
 			
-
-			Usuario usu =null;
 			try {
 				System.out.println("Intento de acceso: "+usuario +" "+SHAHashing.sha256(usuario)+" pass:"+contra+" "+SHAHashing.sha256(contra));
 				usu = (Usuario)em.createNamedQuery("Usuario.findValid").setParameter("usuario", SHAHashing.sha256(usuario)).setParameter("password", SHAHashing.sha256(contra)).getSingleResult();
@@ -87,7 +86,9 @@ public class LoginServlet extends HttpServlet {
 		else{
 		//System.out.println(request.getParameterNames());
 		HttpSession misesion = request.getSession();
-		misesion.setAttribute("usuario", usuario);
+		misesion.setAttribute("usuario", usu.getUsuariosId());
+		misesion.setAttribute("maestro", usu.getEsDocente() );
+		misesion.setAttribute("admin", usu.getEsAdmin() );
 		response.sendRedirect("app.jsp");
 		}
 		

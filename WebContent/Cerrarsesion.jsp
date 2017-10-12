@@ -4,6 +4,8 @@
 <%
 HttpSession misesion = request.getSession(false);
 misesion.removeAttribute("usuario");
+misesion.removeAttribute("maestro");
+misesion.removeAttribute("admin");
 misesion.invalidate();
 response.sendRedirect("index.html");
 %>
