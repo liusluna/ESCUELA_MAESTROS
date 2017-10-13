@@ -17,13 +17,15 @@ import java.util.List;
 ({
 	@NamedQuery(name="Usuario.findAll", query="SELECT u FROM Usuario u"),
 	@NamedQuery(name="Usuario.findValid", query="SELECT u FROM Usuario u where u.usuario = :usuario and u.pass = :password and u.esActivo <> 0")
-})
-public class Usuario implements Serializable {
+})public class Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name="USUARIOS_ID")
 	private int usuariosId;
+
+	@Column(name="CORREO")
+	private String correo;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="CREADO")
@@ -65,6 +67,14 @@ public class Usuario implements Serializable {
 
 	public void setUsuariosId(int usuariosId) {
 		this.usuariosId = usuariosId;
+	}
+
+	public String getCorreo() {
+		return this.correo;
+	}
+
+	public void setCorreo(String correo) {
+		this.correo = correo;
 	}
 
 	public Date getCreado() {
