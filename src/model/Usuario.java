@@ -3,7 +3,6 @@ package model;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -16,11 +15,14 @@ import java.util.List;
 @NamedQueries
 ({
 	@NamedQuery(name="Usuario.findAll", query="SELECT u FROM Usuario u"),
-	@NamedQuery(name="Usuario.findValid", query="SELECT u FROM Usuario u where u.usuario = :usuario and u.pass = :password and u.esActivo <> 0")
-})public class Usuario implements Serializable {
+	@NamedQuery(name="Usuario.findUser", query="SELECT u FROM Usuario u where u.usuario = :usuario"),
+	@NamedQuery(name="Usuario.findValid", query="SELECT u FROM Usuario u where u.usuario = :usuario and u.pass = :password")
+})
+public class Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="USUARIOS_ID")
 	private int usuariosId;
 
@@ -49,11 +51,7 @@ import java.util.List;
 	@Column(name="USUARIO")
 	private String usuario;
 
-	//bi-directional many-to-one association to Horariosmateria
-	@OneToMany(mappedBy="usuario")
-	private List<Horariosmateria> horariosmaterias;
-
-	//bi-directional many-to-one association to Dato
+	//uni-directional many-to-one association to Dato
 	@ManyToOne
 	@JoinColumn(name="DATOS_ID")
 	private Dato dato;
@@ -131,28 +129,6 @@ import java.util.List;
 
 	public void setUsuario(String usuario) {
 		this.usuario = usuario;
-	}
-
-	public List<Horariosmateria> getHorariosmaterias() {
-		return this.horariosmaterias;
-	}
-
-	public void setHorariosmaterias(List<Horariosmateria> horariosmaterias) {
-		this.horariosmaterias = horariosmaterias;
-	}
-
-	public Horariosmateria addHorariosmateria(Horariosmateria horariosmateria) {
-		getHorariosmaterias().add(horariosmateria);
-		horariosmateria.setUsuario(this);
-
-		return horariosmateria;
-	}
-
-	public Horariosmateria removeHorariosmateria(Horariosmateria horariosmateria) {
-		getHorariosmaterias().remove(horariosmateria);
-		horariosmateria.setUsuario(null);
-
-		return horariosmateria;
 	}
 
 	public Dato getDato() {

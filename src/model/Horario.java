@@ -2,7 +2,6 @@ package model;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.List;
 
 
 /**
@@ -16,6 +15,7 @@ public class Horario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="HORARIOS_ID")
 	private int horariosId;
 
@@ -24,10 +24,6 @@ public class Horario implements Serializable {
 
 	@Column(name="HORARIOS")
 	private String horarios;
-
-	//bi-directional many-to-one association to Horariosmateria
-	@OneToMany(mappedBy="horario")
-	private List<Horariosmateria> horariosmaterias;
 
 	public Horario() {
 	}
@@ -54,28 +50,6 @@ public class Horario implements Serializable {
 
 	public void setHorarios(String horarios) {
 		this.horarios = horarios;
-	}
-
-	public List<Horariosmateria> getHorariosmaterias() {
-		return this.horariosmaterias;
-	}
-
-	public void setHorariosmaterias(List<Horariosmateria> horariosmaterias) {
-		this.horariosmaterias = horariosmaterias;
-	}
-
-	public Horariosmateria addHorariosmateria(Horariosmateria horariosmateria) {
-		getHorariosmaterias().add(horariosmateria);
-		horariosmateria.setHorario(this);
-
-		return horariosmateria;
-	}
-
-	public Horariosmateria removeHorariosmateria(Horariosmateria horariosmateria) {
-		getHorariosmaterias().remove(horariosmateria);
-		horariosmateria.setHorario(null);
-
-		return horariosmateria;
 	}
 
 }

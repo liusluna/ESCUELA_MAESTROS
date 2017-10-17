@@ -15,28 +15,29 @@ public class Horariosmateria implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="HORARIOSMATERIAS_ID")
 	private int horariosmateriasId;
 
-	//bi-directional many-to-one association to Usuario
+	//uni-directional many-to-one association to Grupo
 	@ManyToOne
-	@JoinColumn(name="USUARIOS_ID")
-	private Usuario usuario;
+	@JoinColumn(name="GRUPOS_ID")
+	private Grupo grupo;
 
-	//bi-directional many-to-one association to Materia
-	@ManyToOne
-	@JoinColumn(name="MATERIAS_ID")
-	private Materia materia;
-
-	//bi-directional many-to-one association to Horario
+	//uni-directional many-to-one association to Horario
 	@ManyToOne
 	@JoinColumn(name="HORARIOS_ID")
 	private Horario horario;
 
-	//bi-directional many-to-one association to Grupo
+	//uni-directional many-to-one association to Materia
 	@ManyToOne
-	@JoinColumn(name="GRUPOS_ID")
-	private Grupo grupo;
+	@JoinColumn(name="MATERIAS_ID")
+	private Materia materia;
+
+	//uni-directional many-to-one association to Usuario
+	@ManyToOne
+	@JoinColumn(name="USUARIOS_ID")
+	private Usuario usuario;
 
 	public Horariosmateria() {
 	}
@@ -49,20 +50,12 @@ public class Horariosmateria implements Serializable {
 		this.horariosmateriasId = horariosmateriasId;
 	}
 
-	public Usuario getUsuario() {
-		return this.usuario;
+	public Grupo getGrupo() {
+		return this.grupo;
 	}
 
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
-
-	public Materia getMateria() {
-		return this.materia;
-	}
-
-	public void setMateria(Materia materia) {
-		this.materia = materia;
+	public void setGrupo(Grupo grupo) {
+		this.grupo = grupo;
 	}
 
 	public Horario getHorario() {
@@ -73,12 +66,20 @@ public class Horariosmateria implements Serializable {
 		this.horario = horario;
 	}
 
-	public Grupo getGrupo() {
-		return this.grupo;
+	public Materia getMateria() {
+		return this.materia;
 	}
 
-	public void setGrupo(Grupo grupo) {
-		this.grupo = grupo;
+	public void setMateria(Materia materia) {
+		this.materia = materia;
+	}
+
+	public Usuario getUsuario() {
+		return this.usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 }
