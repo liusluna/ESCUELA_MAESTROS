@@ -7,6 +7,7 @@ import model.Dato;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -53,6 +54,27 @@ public class UsuariosServlet extends HttpServlet {
 
 		// realiza la operacion deseada
 		if (request.getParameter("operacion").equals("muestra")) {
+			EntityManagerFactory emf = Persistence.createEntityManagerFactory("ESCUELA_MAESTROS"); 
+			EntityManager em = emf.createEntityManager();
+			// Abrir su try /cash / finally
+			List<Usuario> listaUsuarios = null;
+			try {
+				listaUsuarios = (List<Usuario>) em.createNamedQuery("Usuario.findAll").getResultList();
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.out.println("Error al intentar listar los usuarios: " + e.getMessage());
+
+			} finally {
+				// System.out.println("JPA CLOSING CONNEXIONS!");
+				em.close();
+				emf.close();
+			}
+			
+
+				misesion.setAttribute("usuarios", listaUsuarios);
+				request.setAttribute("tipo","usuarios");
+				request.setAttribute("pagina","1");
+				request.getRequestDispatcher("Muestra.jsp").forward(request, response);
 
 		} else if (request.getParameter("operacion").equals("eliminar")) {
 
@@ -69,8 +91,8 @@ public class UsuariosServlet extends HttpServlet {
 			String colonia = request.getParameter("colonia").toUpperCase();
 			String estado = request.getParameter("estado").toUpperCase();
 			String municipio = request.getParameter("municipio").toUpperCase();
-			String docente = request.getParameter("docente").toUpperCase();
-			String admin = request.getParameter("admin").toUpperCase();
+			String docente=null ; if (request.getParameter("docente") != null) docente = request.getParameter("docente").toUpperCase();
+			String admin =null; if (request.getParameter("admin") != null) admin = request.getParameter("admin").toUpperCase();
 			Integer matricula = Integer.parseInt(request.getParameter("matricula"));
 
 			EntityManagerFactory emf = Persistence.createEntityManagerFactory("ESCUELA_MAESTROS");
@@ -82,20 +104,20 @@ public class UsuariosServlet extends HttpServlet {
 
 			try {
 				Usuario usu = null;
-				
-				
-				tran.begin();
 							
 				
+						
+				
 				try {
-					usu = (Usuario) em.createNamedQuery("Usuario.findAll")
-							.setParameter("usuario", SHAHashing.sha256(usuario))
-							.getSingleResult();
+					usu = (Usuario) em.createNamedQuery("Usuario.findUser")
+							.setParameter("usuario", SHAHashing.sha256(usuario)).getSingleResult();
 				} catch (Exception e) {
-					System.out.println("Agregando usu: " + nombre + " " + appaterno + " " + apmaterno);
+					System.out.println("Problemas al agregar: " + nombre + " " + appaterno + " " + apmaterno + e.getMessage());
 				}
+				
 				if (usu == null) {
-					System.out.println("Create usu");
+					tran.begin();
+					System.out.println("Create usuario");
 					Dato datos = new Dato();
 					usu = new Usuario();
 					
@@ -106,7 +128,10 @@ public class UsuariosServlet extends HttpServlet {
 					datos.setEstado(estado);
 					datos.setMunicipio(municipio);
 					datos.setNombre(nombre);
-					
+					em.persist(datos);
+					em.flush();
+					//em.refresh(datos);
+					System.out.println(datos.getDatosId());
 					
 					usu.setDato(datos);
 					//usu.setCreado(creado);
@@ -114,21 +139,28 @@ public class UsuariosServlet extends HttpServlet {
 					usu.setMatricula(matricula);
 					usu.setCorreo(correo);
 					usu.setEsActivo(1);
-					if( docente == null ) { usu.setEsDocente(0); } else {usu.setEsDocente(1);}
-					if( admin == null ) { usu.setEsAdmin(0); } else {usu.setEsAdmin(1);}
+					if( docente == null )   usu.setEsDocente(0); else usu.setEsDocente(1) ;
+					if( admin == null) { usu.setEsAdmin(0); } else {usu.setEsAdmin(1);}
 					usu.setUsuario(SHAHashing.sha256(usuario));
 					usu.setPass(SHAHashing.sha256(contra));
 					
 
 					System.out.println("Persist usu");
 					em.persist(usu);
+					em.flush();
+					System.out.println(usu.getUsuariosId());
+					
+					tran.commit();
+					
 
 					ArrayList<String> salida = new ArrayList<String>();
 					salida.add("Usuario : ["+usuario+"] con datos:" + nombre + " " + appaterno + " " + apmaterno +" Insertado");
 					salida.add("en la base de datos");
 					request.setAttribute("info", salida);
 					request.getRequestDispatcher("info.jsp").forward(request, response);
+					
 
+					
 				} else {
 					ArrayList<String> salida = new ArrayList<String>();
 					salida.add("Usuario : ["+usuario+"] con datos:" + nombre + " " + appaterno + " " + apmaterno + " ya existe");
@@ -136,7 +168,8 @@ public class UsuariosServlet extends HttpServlet {
 					request.setAttribute("info", salida);
 					request.getRequestDispatcher("info.jsp").forward(request, response);
 				}
-				tran.commit();
+
+				
 			} catch (Exception e) {
 				tran.rollback();
 				// TODO: handle exception

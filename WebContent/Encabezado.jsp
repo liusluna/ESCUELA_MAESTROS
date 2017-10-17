@@ -58,7 +58,7 @@
                 <ul class="dropdown-menu">
                   <li><a href="Usuarios?operacion=muestra&">Listar</a></li>
                   <li role="separator" class="divider"></li>
-                  <li><a href="addUsuario.jsp">Alta</a></li>
+                  <li><a href="adduser.jsp">Alta</a></li>
                 </ul>
               </li>
               <%  } %>
