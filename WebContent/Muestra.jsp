@@ -152,10 +152,10 @@
 			<tr>
 				<th></th>
 				<th>ID</th>
-				<th>Nombre</th>
-				<th>P. Costo</th>
-				<th>P. Venta</th>
-				<th>Descripcion</th>
+				<th>Grupo</th>
+				<th>Aula</th>
+				<th>Horario</th>
+				<th>Maestro</th>
 				<th>Solicitar cambio</th>
 			</tr>
 		</thead>
@@ -181,7 +181,7 @@
 				<td><%= hm.getHorario().getAula() %></td>
 				<td><%= hm.getHorario().getHorarios() %></td>
 				<td><%= hm.getUsuario().getDato().getNombre() %></td>
-				<td><input type="button" name="Cambio" value="Cambio" onclick="location.href='EnviarCorreoServlet'"></td>
+				<td><input type="button" name="Cambio" value="Cambio" onclick="location.href='EnviarCorreoServlet?operacion=<%=hm.getUsuario().getCorreo()%>&'"></td>
 			</tr>
 			<%
 				}
