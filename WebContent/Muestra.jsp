@@ -156,6 +156,7 @@
 				<th>P. Costo</th>
 				<th>P. Venta</th>
 				<th>Descripcion</th>
+				<th>Solicitar cambio</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -180,6 +181,7 @@
 				<td><%= hm.getHorario().getAula() %></td>
 				<td><%= hm.getHorario().getHorarios() %></td>
 				<td><%= hm.getUsuario().getDato().getNombre() %></td>
+				<td><input type="button" name="Cambio" value="Cambio" onclick="location.href='EnviarCorreoServlet'"></td>
 			</tr>
 			<%
 				}

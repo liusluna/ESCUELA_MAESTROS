@@ -72,7 +72,7 @@
                   <li><a href="addHorario.jsp">Asignar</a></li>
                   <% } %>
                   <% if (  Integer.parseInt(String.valueOf(misesion.getAttribute("maestro"))) == 1  ) {   %>
-                  <li><a href="pedirCambio.jsp">Cambio</a></li><!-- Rafa -->
+                  <li><a href="Horarios?operacion=muestra">Cambio</a></li><!-- Rafa -->
                   <% } %>
                 </ul>
               </li> 
