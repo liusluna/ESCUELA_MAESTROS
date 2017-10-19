@@ -16,7 +16,9 @@ import java.util.Date;
 ({
 	@NamedQuery(name="Usuario.findAll", query="SELECT u FROM Usuario u"),
 	@NamedQuery(name="Usuario.findUser", query="SELECT u FROM Usuario u where u.usuario = :usuario"),
-	@NamedQuery(name="Usuario.findValid", query="SELECT u FROM Usuario u where u.usuario = :usuario and u.pass = :password")
+	@NamedQuery(name="Usuario.findValid", query="SELECT u FROM Usuario u where u.usuario = :usuario and u.pass = :password"),
+	@NamedQuery(name="Usuario.findMaestros", query="SELECT u FROM Usuario u where u.esDocente = 1"),
+	@NamedQuery(name="Usuario.findbyid", query="SELECT u FROM Usuario u where u.usuariosId = :id")
 })
 public class Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;

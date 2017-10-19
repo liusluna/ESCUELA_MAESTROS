@@ -10,7 +10,11 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="HORARIOS")
-@NamedQuery(name="Horario.findAll", query="SELECT h FROM Horario h")
+@NamedQueries
+({
+	@NamedQuery(name="Horario.findAll", query="SELECT h FROM Horario h"),
+	@NamedQuery(name="Horario.findbyid", query="SELECT h FROM Horario h where h.horariosId = :id")
+})
 public class Horario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
