@@ -1,11 +1,13 @@
 package servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,21 +24,24 @@ import model.*;
 @WebServlet("/Horarios")
 public class HorariosServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public HorariosServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public HorariosServlet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		// response.getWriter().append("Served at:
+		// ").append(request.getContextPath());
 		HttpSession misesion = request.getSession(false);
 
 		if (misesion.getAttribute("usuario") == null) {
@@ -45,7 +50,7 @@ public class HorariosServlet extends HttpServlet {
 
 		// realiza la operacion deseada
 		if (request.getParameter("operacion").equals("muestra")) {
-			EntityManagerFactory emf = Persistence.createEntityManagerFactory("ESCUELA_MAESTROS"); 
+			EntityManagerFactory emf = Persistence.createEntityManagerFactory("ESCUELA_MAESTROS");
 			EntityManager em = emf.createEntityManager();
 			// Abrir su try /cash / finally
 			List<Horariosmateria> hm = null;
@@ -60,18 +65,62 @@ public class HorariosServlet extends HttpServlet {
 				em.close();
 				emf.close();
 			}
-			
 
-				misesion.setAttribute("horarios", hm);
-				request.setAttribute("tipo","horarios");
-				request.setAttribute("pagina","1");
-				request.getRequestDispatcher("Muestra.jsp").forward(request, response);
+			misesion.setAttribute("horarios", hm);
+			request.setAttribute("tipo", "horarios");
+			request.setAttribute("pagina", "1");
+			request.getRequestDispatcher("Muestra.jsp").forward(request, response);
 
 		} else if (request.getParameter("operacion").equals("eliminar")) {
 
 		} else if (request.getParameter("operacion").equals("agregar")) {
 			
-		}else {
+			Integer horario = Integer.parseInt(request.getParameter("horario"));
+			Integer profesor = Integer.parseInt(request.getParameter("profesor"));
+			Integer materia = Integer.parseInt(request.getParameter("materia"));
+			Integer grupo = Integer.parseInt(request.getParameter("grupo"));
+			
+			EntityManagerFactory emf = Persistence.createEntityManagerFactory("ESCUELA_MAESTROS");
+			EntityManager em = emf.createEntityManager();
+			EntityTransaction tran = em.getTransaction();
+			// Abrir su try /cash / finally
+			
+			try {
+				tran.begin();
+				Horariosmateria hm = new Horariosmateria();
+				//Grupo gp=new Grupo();
+		
+				hm.setGrupo( (Grupo) em.createNamedQuery("Grupo.findbyid").setParameter("id", grupo).getSingleResult() );
+				hm.setHorario( (Horario) em.createNamedQuery("Horario.findbyid").setParameter("id", horario).getSingleResult() );
+				hm.setMateria((Materia) em.createNamedQuery("Materia.findbyid").setParameter("id", materia).getSingleResult() );
+				hm.setUsuario((Usuario) em.createNamedQuery("Usuario.findbyid").setParameter("id", profesor).getSingleResult() );
+				em.persist(hm);
+				tran.commit();
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+				tran.rollback();
+				System.out.println("Error al intentar insertar horarios materias: " + e.getMessage());
+				
+				ArrayList<String> salida = new ArrayList<String>();
+				salida.add("Error al insertar el insertar en horarios materias: ");
+				salida.add("en la base de datos");
+				request.setAttribute("error", salida);
+				request.getRequestDispatcher("error.jsp").forward(request, response);
+
+			} finally {
+				// System.out.println("JPA CLOSING CONNEXIONS!");
+				em.close();
+				emf.close();
+			}
+			
+			ArrayList<String> salida = new ArrayList<String>();
+			salida.add("Horario Insertado");
+			salida.add("en la base de datos");
+			request.setAttribute("info", salida);
+			request.getRequestDispatcher("info.jsp").forward(request, response);
+
+		} else {
 			// si no hay una operacion definida, imprime en el log los
 			// parametros que trae
 			Enumeration<?> params = request.getParameterNames();
@@ -84,13 +133,14 @@ public class HorariosServlet extends HttpServlet {
 			request.getRequestDispatcher("app.jsp").forward(request, response);
 		}
 
-		
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
