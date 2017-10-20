@@ -120,6 +120,51 @@ public class HorariosServlet extends HttpServlet {
 			request.setAttribute("info", salida);
 			request.getRequestDispatcher("info.jsp").forward(request, response);
 
+		} else if (request.getParameter("operacion").equals("agregarhorario")) {
+			
+			String horarios = request.getParameter("horarios");
+			String aula = request.getParameter("aula");
+			
+		
+			EntityManagerFactory emf = Persistence.createEntityManagerFactory("ESCUELA_MAESTROS");
+			EntityManager em = emf.createEntityManager();
+			EntityTransaction tran = em.getTransaction();
+			// Abrir su try /cash / finally
+			
+			try {
+				tran.begin();
+				
+				Horario hora = new Horario();
+				
+				hora.setAula(aula);
+				hora.setHorarios(horarios);
+
+				em.persist(hora);
+				tran.commit();
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+				tran.rollback();
+				System.out.println("Error al intentar insertar horarios materias: " + e.getMessage());
+				
+				ArrayList<String> salida = new ArrayList<String>();
+				salida.add("Error al insertar el insertar en horarios: ");
+				salida.add("en la base de datos");
+				request.setAttribute("error", salida);
+				request.getRequestDispatcher("error.jsp").forward(request, response);
+
+			} finally {
+				// System.out.println("JPA CLOSING CONNEXIONS!");
+				em.close();
+				emf.close();
+			}
+			
+			ArrayList<String> salida = new ArrayList<String>();
+			salida.add("Horario Insertado");
+			salida.add("en la base de datos");
+			request.setAttribute("info", salida);
+			request.getRequestDispatcher("info.jsp").forward(request, response);
+			
 		} else {
 			// si no hay una operacion definida, imprime en el log los
 			// parametros que trae

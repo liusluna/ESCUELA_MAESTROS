@@ -67,9 +67,10 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Horarios <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                   <% if (  Integer.parseInt(String.valueOf(misesion.getAttribute("admin"))) == 1  ) {   %>
-                  <li><a href="Horarios?operacion=muestra&">Listar</a></li>
+                  <li><a href="Horarios?operacion=muestra&">Listar</a></li>                
+                  <li><a href="addHorario.jsp">Agregar</a></li>
+                  <li><a href="asignaHorario.jsp">Asignar</a></li>
                   <li role="separator" class="divider"></li>
-                  <li><a href="addHorario.jsp">Asignar</a></li>
                   <% } %>
                   <% if (  Integer.parseInt(String.valueOf(misesion.getAttribute("maestro"))) == 1  ) {   %>
                   <li><a href="Horarios?operacion=muestra">Cambio</a></li><!-- Rafa -->
