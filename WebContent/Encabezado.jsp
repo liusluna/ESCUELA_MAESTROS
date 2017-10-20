@@ -73,7 +73,7 @@
                   <li role="separator" class="divider"></li>
                   <% } %>
                   <% if (  Integer.parseInt(String.valueOf(misesion.getAttribute("maestro"))) == 1  ) {   %>
-                  <li><a href="Horarios?operacion=muestra">Cambio</a></li><!-- Rafa -->
+                  <li><a href="Horarios?operacion=muestra">Listar</a></li>
                   <% } %>
                 </ul>
               </li> 

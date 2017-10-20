@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -55,12 +56,14 @@ public class HorariosServlet extends HttpServlet {
 			// Abrir su try /cash / finally
 			List<Horariosmateria> hm = null;
 			try {
-				
-				if( (int) misesion.getAttribute("admin") == 1 )
+
+				if ((int) misesion.getAttribute("admin") == 1)
 					hm = (List<Horariosmateria>) em.createNamedQuery("Horariosmateria.findAll").getResultList();
-				else{
-					Usuario user = (Usuario) em.createNamedQuery("Usuario.findbyid").setParameter("id", misesion.getAttribute("usuario")).getSingleResult();
-					hm = (List<Horariosmateria>) em.createNamedQuery("Horariosmateria.findAllusuario").setParameter("usuario", user ).getResultList();
+				else {
+					Usuario user = (Usuario) em.createNamedQuery("Usuario.findbyid")
+							.setParameter("id", misesion.getAttribute("usuario")).getSingleResult();
+					hm = (List<Horariosmateria>) em.createNamedQuery("Horariosmateria.findAllusuario")
+							.setParameter("usuario", user).getResultList();
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -80,34 +83,37 @@ public class HorariosServlet extends HttpServlet {
 		} else if (request.getParameter("operacion").equals("eliminar")) {
 
 		} else if (request.getParameter("operacion").equals("agregar")) {
-			
+
 			Integer horario = Integer.parseInt(request.getParameter("horario"));
 			Integer profesor = Integer.parseInt(request.getParameter("profesor"));
 			Integer materia = Integer.parseInt(request.getParameter("materia"));
 			Integer grupo = Integer.parseInt(request.getParameter("grupo"));
-			
+
 			EntityManagerFactory emf = Persistence.createEntityManagerFactory("ESCUELA_MAESTROS");
 			EntityManager em = emf.createEntityManager();
 			EntityTransaction tran = em.getTransaction();
 			// Abrir su try /cash / finally
-			
+
 			try {
 				tran.begin();
 				Horariosmateria hm = new Horariosmateria();
-				//Grupo gp=new Grupo();
-		
-				hm.setGrupo( (Grupo) em.createNamedQuery("Grupo.findbyid").setParameter("id", grupo).getSingleResult() );
-				hm.setHorario( (Horario) em.createNamedQuery("Horario.findbyid").setParameter("id", horario).getSingleResult() );
-				hm.setMateria((Materia) em.createNamedQuery("Materia.findbyid").setParameter("id", materia).getSingleResult() );
-				hm.setUsuario((Usuario) em.createNamedQuery("Usuario.findbyid").setParameter("id", profesor).getSingleResult() );
+				// Grupo gp=new Grupo();
+
+				hm.setGrupo((Grupo) em.createNamedQuery("Grupo.findbyid").setParameter("id", grupo).getSingleResult());
+				hm.setHorario((Horario) em.createNamedQuery("Horario.findbyid").setParameter("id", horario)
+						.getSingleResult());
+				hm.setMateria((Materia) em.createNamedQuery("Materia.findbyid").setParameter("id", materia)
+						.getSingleResult());
+				hm.setUsuario((Usuario) em.createNamedQuery("Usuario.findbyid").setParameter("id", profesor)
+						.getSingleResult());
 				em.persist(hm);
 				tran.commit();
-				
+
 			} catch (Exception e) {
 				// TODO: handle exception
 				tran.rollback();
 				System.out.println("Error al intentar insertar horarios materias: " + e.getMessage());
-				
+
 				ArrayList<String> salida = new ArrayList<String>();
 				salida.add("Error al insertar el insertar en horarios materias: ");
 				salida.add("en la base de datos");
@@ -119,7 +125,7 @@ public class HorariosServlet extends HttpServlet {
 				em.close();
 				emf.close();
 			}
-			
+
 			ArrayList<String> salida = new ArrayList<String>();
 			salida.add("Horario Insertado");
 			salida.add("en la base de datos");
@@ -127,32 +133,31 @@ public class HorariosServlet extends HttpServlet {
 			request.getRequestDispatcher("info.jsp").forward(request, response);
 
 		} else if (request.getParameter("operacion").equals("agregarhorario")) {
-			
+
 			String horarios = request.getParameter("horarios").toUpperCase();
 			String aula = request.getParameter("aula").toUpperCase();
-			
-		
+
 			EntityManagerFactory emf = Persistence.createEntityManagerFactory("ESCUELA_MAESTROS");
 			EntityManager em = emf.createEntityManager();
 			EntityTransaction tran = em.getTransaction();
 			// Abrir su try /cash / finally
-			
+
 			try {
 				tran.begin();
-				
+
 				Horario hora = new Horario();
-				
+
 				hora.setAula(aula);
 				hora.setHorarios(horarios);
 
 				em.persist(hora);
 				tran.commit();
-				
+
 			} catch (Exception e) {
 				// TODO: handle exception
 				tran.rollback();
 				System.out.println("Error al intentar insertar horarios materias: " + e.getMessage());
-				
+
 				ArrayList<String> salida = new ArrayList<String>();
 				salida.add("Error al insertar el insertar en horarios: ");
 				salida.add("en la base de datos");
@@ -164,13 +169,53 @@ public class HorariosServlet extends HttpServlet {
 				em.close();
 				emf.close();
 			}
-			
+
 			ArrayList<String> salida = new ArrayList<String>();
 			salida.add("Horario Insertado");
 			salida.add("en la base de datos");
 			request.setAttribute("info", salida);
 			request.getRequestDispatcher("info.jsp").forward(request, response);
-			
+		} else if (request.getParameter("operacion").equals("exportar")) {
+			// jala de la session los horarios que mostraba en la pantalla
+			//
+			List<Horariosmateria> lista = (List<Horariosmateria>) misesion.getAttribute("horarios");
+
+			try {
+				response.setContentType("text/xml");
+				response.setHeader("Content-Disposition", "attachment;filename=archivo.xml");
+
+				OutputStream outputStream = response.getOutputStream();
+
+				EntityManagerFactory emf = Persistence.createEntityManagerFactory("ESCUELA_MAESTROS");
+				EntityManager em = emf.createEntityManager();
+				// Abrir su try /cash / finally
+
+				String outputResult = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "";
+				outputResult += "<Listado>\n";
+				for (Horariosmateria hm : lista) {
+
+					outputResult += "\t<ID id=\"" + hm.getHorariosmateriasId() + "\">\n";
+					outputResult += "\t\t<Grupo>" + hm.getGrupo().get_descripcion() + "</Grupo>\n";
+					outputResult += "\t\t<Descripcion>" + hm.getGrupo().get_descripcion() + "</Descripcion>\n";
+					outputResult += "\t\t<Aula>" + hm.getHorario().getAula() + "</Aula>\n";
+					outputResult += "\t\t<Horario>" + hm.getHorario().getHorarios() + "</horario>\n";
+					outputResult += "\t\t<Profesor>" + hm.getUsuario().getDato().getApaterno() + " "
+							+ hm.getUsuario().getDato().getNombre() + "</Profesor>\n";
+					outputResult += "\t</ID>\n";
+
+				}
+				outputResult += "</Listado>\n";
+		
+				outputStream.write(outputResult.getBytes());
+				outputStream.flush();
+				outputStream.close();
+
+			} catch (Exception e) {
+				System.out.println("Error al intentar descargar el archivo G: " + e.getMessage());
+				System.out.println(e.toString());
+				// e.printStackTrace();
+			}
+
 		} else {
 			// si no hay una operacion definida, imprime en el log los
 			// parametros que trae

@@ -180,7 +180,7 @@
 				<td><%= hm.getGrupo().get_descripcion() %></td>
 				<td><%= hm.getHorario().getAula() %></td>
 				<td><%= hm.getHorario().getHorarios() %></td>
-				<td><%= hm.getUsuario().getDato().getNombre() %></td>
+				<td><%= hm.getUsuario().getDato().getApaterno() %>&nbsp;<%= hm.getUsuario().getDato().getNombre() %></td>
 				<td><input type="button" name="Cambio" value="Cambio" onclick="location.href='EnviarCorreoServlet?operacion=<%=hm.getUsuario().getCorreo()%>&'"></td>
 			</tr>
 			<%
@@ -188,7 +188,13 @@
 
 			} 
 			%>
-
+<!-- Button -->
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="exportar">Exportar</label>
+				<div class="col-md-4">
+					<button id="exportar" name="exportar" class="btn btn-secundary" onclick="location.href='Horarios?operacion=exportar&'">XML</button>
+				</div>
+			</div>
 			<%
 		}
 	%>
@@ -247,6 +253,8 @@
    		//termina info
     }
    %>
+	
+				
 	
   </div>
   
