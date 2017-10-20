@@ -198,7 +198,7 @@ public class HorariosServlet extends HttpServlet {
 					outputResult += "\t\t<Grupo>" + hm.getGrupo().get_descripcion() + "</Grupo>\n";
 					outputResult += "\t\t<Descripcion>" + hm.getGrupo().get_descripcion() + "</Descripcion>\n";
 					outputResult += "\t\t<Aula>" + hm.getHorario().getAula() + "</Aula>\n";
-					outputResult += "\t\t<Horario>" + hm.getHorario().getHorarios() + "</horario>\n";
+					outputResult += "\t\t<Horario>" + hm.getHorario().getHorarios() + "</Horario>\n";
 					outputResult += "\t\t<Profesor>" + hm.getUsuario().getDato().getApaterno() + " "
 							+ hm.getUsuario().getDato().getNombre() + "</Profesor>\n";
 					outputResult += "\t</ID>\n";
