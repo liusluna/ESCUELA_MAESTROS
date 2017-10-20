@@ -112,7 +112,7 @@ public class UsuariosServlet extends HttpServlet {
 					usu = (Usuario) em.createNamedQuery("Usuario.findUser")
 							.setParameter("usuario", SHAHashing.sha256(usuario)).getSingleResult();
 				} catch (Exception e) {
-					System.out.println("Problemas al agregar: " + nombre + " " + appaterno + " " + apmaterno + e.getMessage());
+					System.out.println("Usuario no existe, procediendo a insertar : " + nombre + " " + appaterno + " " + apmaterno + e.getMessage());
 				}
 				
 				if (usu == null) {

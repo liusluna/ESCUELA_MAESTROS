@@ -55,7 +55,13 @@ public class HorariosServlet extends HttpServlet {
 			// Abrir su try /cash / finally
 			List<Horariosmateria> hm = null;
 			try {
-				hm = (List<Horariosmateria>) em.createNamedQuery("Horariosmateria.findAll").getResultList();
+				
+				if( (int) misesion.getAttribute("admin") == 1 )
+					hm = (List<Horariosmateria>) em.createNamedQuery("Horariosmateria.findAll").getResultList();
+				else{
+					Usuario user = (Usuario) em.createNamedQuery("Usuario.findbyid").setParameter("id", misesion.getAttribute("usuario")).getSingleResult();
+					hm = (List<Horariosmateria>) em.createNamedQuery("Horariosmateria.findAllusuario").setParameter("usuario", user ).getResultList();
+				}
 			} catch (Exception e) {
 				// TODO: handle exception
 				System.out.println("Error al intentar listar los horarios materias: " + e.getMessage());
@@ -122,8 +128,8 @@ public class HorariosServlet extends HttpServlet {
 
 		} else if (request.getParameter("operacion").equals("agregarhorario")) {
 			
-			String horarios = request.getParameter("horarios");
-			String aula = request.getParameter("aula");
+			String horarios = request.getParameter("horarios").toUpperCase();
+			String aula = request.getParameter("aula").toUpperCase();
 			
 		
 			EntityManagerFactory emf = Persistence.createEntityManagerFactory("ESCUELA_MAESTROS");
